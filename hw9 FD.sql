@@ -73,8 +73,13 @@ ORDER BY count DESC;
 
 -- 4b.	List last names of actors and the number of actors who have that last name, but only for names that are 
 -- 	shared by at least two actors
-
--- > to do
+SELECT 
+    last_name,
+    COUNT(last_name) AS 'number of actors with same last name'
+FROM
+    actor
+GROUP BY last_name
+HAVING COUNT(last_name) >= 2;
 
 -- 4c.	The actor HARPO WILLIAMS was accidentally entered in the actor table as GROUCHO WILLIAMS. Write a query 
 -- 		to fix the record.
@@ -206,7 +211,7 @@ FROM
         INNER JOIN
     city ON address.city_id = city.city_id
         INNER JOIN
-    country ON country.country_id = city.country_id
+    country ON city.country_id = country.country_id
 WHERE
     country.country = 'Canada'
 ORDER BY customer.last_name , customer.first_name;
@@ -259,7 +264,7 @@ FROM
         INNER JOIN
     inventory ON rental.inventory_id = inventory.inventory_id
         INNER JOIN
-    film ON film.film_id = inventory.film_id
+    film ON inventory.film_id = film.film_id
 GROUP BY film.title
 ORDER BY 'most frequently rented movies' DESC;
 
@@ -292,6 +297,7 @@ FROM
 
 -- 7h.	List the top five genres in gross revenue in descending order. (Hint: you may need to use the following 
 -- 		tables: category, film_category, inventory, payment, and rental.)
+-- > to do: sort does not work
 SELECT 
     category.name 'top five genres',
     SUM(payment.amount) 'gross revenue'
