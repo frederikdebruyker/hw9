@@ -100,7 +100,7 @@ WHERE
     first_name = 'HARPO';
 
 -- 5a.	You cannot locate the schema of the address table. Which query would you use to re-create it?
-create schema address;
+CREATE SCHEMA IF NOT EXISTS address;
 
 -- 6a.	Use JOIN to display the first and last names, as well as the address, of each staff member. Use the 
 -- 		tables staff and address: 
@@ -240,7 +240,6 @@ ORDER BY customer.last_name , customer.first_name;
 
 -- 7d.	Sales have been lagging among young families, and you wish to target all family movies for a promotion. 
 -- 		Identify all movies categorized as family films.
--- > to do: sort does not work
 SELECT 
     film.title
 FROM
@@ -258,7 +257,7 @@ ORDER BY film.title;
 
 -- 7e.	Display the most frequently rented movies in descending order.
 SELECT 
-    film.title, COUNT(*) AS 'most frequently rented movies'
+    film.title, COUNT(rental_id) AS 'most frequently rented movies'
 FROM
     rental
         INNER JOIN
@@ -266,7 +265,7 @@ FROM
         INNER JOIN
     film ON inventory.film_id = film.film_id
 GROUP BY film.title
-ORDER BY 'most frequently rented movies' DESC;
+ORDER BY COUNT(rental_id) DESC;
 
 -- 7f.	Write a query to display how much business, in dollars, each store brought in.
 SELECT 
@@ -281,7 +280,6 @@ FROM
 GROUP BY store.store_id;
 
 -- 7g.	Write a query to display for each store its store ID, city, and country.
--- > to do: sort does not work
 SELECT 
     store.store_id 'store ID',
     city.city 'city',
@@ -312,7 +310,7 @@ FROM
         INNER JOIN
     payment ON rental.rental_id = payment.rental_id
 GROUP BY category.name
-ORDER BY payment.amount DESC
+ORDER BY sum(payment.amount) DESC
 LIMIT 5;
 
 -- 8a.	In your new role as an executive, you would like to have an easy way of viewing the Top five genres by 
@@ -334,7 +332,7 @@ CREATE VIEW 8a_v AS
             INNER JOIN
         payment ON rental.rental_id = payment.rental_id
     GROUP BY category.name
-    ORDER BY payment.amount DESC
+    ORDER BY SUM(payment.amount) DESC
     LIMIT 5;
 
 -- 8b.	How would you display the view that you created in 8a?
